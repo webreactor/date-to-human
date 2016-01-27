@@ -1,0 +1,16 @@
+{
+    "name": "webreactor/pretty-date",
+    "description": "Convert datetime to pretty format",
+    "authors": [
+        {
+            "name": "Maxim Popov",
+            "email": "toecto@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Library\\": "Library/"
+        }
+    }
+}
