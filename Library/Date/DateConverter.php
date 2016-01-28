@@ -5,7 +5,6 @@ namespace Library\Date;
 use DateTimeZone;
 
 class DateConverter extends \DateTime {
-    private $time;
 
     public function __construct($time = 'now', DateTimeZone $timezone = null) {
         parent::__construct($time, $timezone);

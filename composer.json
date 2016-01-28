@@ -1,5 +1,5 @@
 {
-    "name": "webreactor/pretty-date",
+    "name": "webreactor/date-to-human",
     "description": "Convert datetime to pretty format",
     "authors": [
         {
