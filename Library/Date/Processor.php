@@ -19,23 +19,23 @@ class Processor {
                 $template['params'] = array();
             }
         }
-        $this->params =
-            ["%hour_unit" => ["%cnt час", "%cnt часа", "%cnt часов"],
-             "%minute_unit" => ["%cnt минуту", "%cnt минуты", "%cnt минут"],
-             "%second_unit" => ["%cnt секунду", "%cnt секунды", "%cnt секунд"],
-             "%day_unit" => ["%cnt день", "%cnt дня", "%cnt дней"],
-             "%week_unit" => ["%cnt неделя", "%cnt недели", "%cnt недель"],
-             "%month_unit" => ["%cnt месяц", "%cnt дня", "%cnt дней"],
-             "%year_unit" => ["%cnt день", "%cnt дня", "%cnt дней"],
-             "ago" => "%datetime назад",
-             "later" => "через %datetime",
-             "before" => "%datetime до",
-             "after" => "%datetime после"];
+        $this->params = array(
+            "%hour_unit" => array("%cnt час", "%cnt часа", "%cnt часов"),
+            "%minute_unit" => array("%cnt минуту", "%cnt минуты", "%cnt минут"),
+            "%second_unit" => array("%cnt секунду", "%cnt секунды", "%cnt секунд"),
+            "%day_unit" => array("%cnt день", "%cnt дня", "%cnt дней"),
+            "%week_unit" => array("%cnt неделя", "%cnt недели", "%cnt недель"),
+            "%month_unit" => array("%cnt месяц", "%cnt дня", "%cnt дней"),
+            "%year_unit" => array("%cnt день", "%cnt дня", "%cnt дней"),
+            "ago" => "%datetime назад",
+            "later" => "через %datetime",
+            "before" => "%datetime до",
+            "after" => "%datetime после");
     }
 
-    public function translate(\DateTime $dt, $relative, array $units, $seconds) {
-        $template = $this->getTemplate($seconds);
-        $search = $replace = [];
+    public function translate(\DateTime $dt, $relative, array $units, $seconds, $calendar) {
+        $template = $this->getTemplate($seconds, $calendar);
+        $search = $replace = array();
         foreach ($template['params'] as $param_name => $param_value) {
             $search[] = $param_name;
             $replace[] = $dt->format($param_value);
@@ -51,12 +51,15 @@ class Processor {
         return $result;
     }
 
-    private function getTemplate($seconds) {
+    private function getTemplate($seconds, $calendar) {
         foreach ($this->rules['templates'] as $rule) {
             if (isset($rule['from']) && $rule['from'] < $seconds) {
                 continue;
             }
             if (isset($rule['till']) && $rule['till'] >= $seconds) {
+                continue;
+            }
+            if (isset($rule['calendar']) && $rule['calendar'] != $calendar) {
                 continue;
             }
             return $rule;

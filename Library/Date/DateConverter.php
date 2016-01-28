@@ -21,10 +21,27 @@ class DateConverter extends \DateTime {
      * @param bool $relative if true add ago or later or after or before
      * @return string
      */
-    public function getHumanString(DateConverter $from = null, $relative = true) {
+    public function getHumanString(DateConverter $from = null, $relative = false) {
         $is_now = ($from === null);
         if ($is_now) {
             $from = new DateConverter();
+        }
+        $ts = $this->getTimestamp();
+        $calendar_diff = (int)($ts - mktime(0, 0, 0)) / 86400;
+        if ($calendar_diff < -6) {
+            $calendar = 'default';
+        } else if ($calendar_diff < -1) {
+            $calendar = 'lastWeek';
+        } else if ($calendar_diff < 0) {
+            $calendar = 'lastDay';
+        } else if ($calendar_diff < 1) {
+            $calendar = 'sameDay';
+        } else if ($calendar_diff < 2) {
+            $calendar = 'nextDay';
+        } else if ($calendar_diff < 7) {
+            $calendar = 'nextWeek';
+        } else {
+            $calendar = 'default';
         }
         $interval = $this->diff($from);
         $units = [];
@@ -43,6 +60,6 @@ class DateConverter extends \DateTime {
         if (!$relative) {
             $key = false;
         }
-        return $this->processor->translate($this, $key, $units, $this->getTimestamp() - $from->getTimestamp());
+        return $this->processor->translate($this, $key, $units, $ts - $from->getTimestamp(), $calendar);
     }
 }
