@@ -43,7 +43,7 @@ class DateConverter extends \DateTime {
             $calendar = 'default';
         }
         $interval = $this->diff($from);
-        $units = [];
+        $units = array();
         $units['%year'] = $interval->y;
         $units['%month'] = $interval->m;
         $units['%day'] = $interval->d;
